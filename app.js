@@ -297,6 +297,75 @@ const scenes = [
   },
 ];
 
+function collectAssetsFromScenes(scenes){
+  const imgs = [];
+  const videos = [];
+  const audios = [];
+
+  for (const sc of scenes){
+    if (sc.src) imgs.push(sc.src);
+    if (sc.ambience?.src) audios.push(sc.ambience.src);
+    if (sc.endVideo?.src) videos.push(sc.endVideo.src);
+
+    for (const st of (sc.steps || [])){
+      if (st.stepImage) imgs.push(st.stepImage);
+      if (st.stepVideo?.src) videos.push(st.stepVideo.src);
+    }
+  }
+  return {
+    imgs: [...new Set(imgs)],
+    videos: [...new Set(videos)],
+    audios: [...new Set(audios)],
+  };
+}
+
+function preloadImage(src){
+  return new Promise((resolve) => {
+    const im = new Image();
+    im.onload = () => resolve(true);
+    im.onerror = () => resolve(false);
+    im.src = src;
+  });
+}
+
+function preloadVideo(src){
+  return new Promise((resolve) => {
+    const v = document.createElement("video");
+    v.preload = "auto";
+    v.muted = true;      // para que deje precargar sin líos
+    v.playsInline = true;
+    v.onloadeddata = () => resolve(true);
+    v.onerror = () => resolve(false);
+    v.src = src;
+    v.load();
+  });
+}
+
+function preloadAudio(src){
+  return new Promise((resolve) => {
+    const a = document.createElement("audio");
+    a.preload = "auto";
+    a.oncanplaythrough = () => resolve(true);
+    a.onerror = () => resolve(false);
+    a.src = src;
+    a.load();
+  });
+}
+
+async function preloadAllAssets(){
+  const { imgs, videos, audios } = collectAssetsFromScenes(scenes);
+
+  // Importante: imágenes primero, porque tu UI depende de ellas.
+  await Promise.all(imgs.map(preloadImage));
+
+  // Video/audio en paralelo (si alguno falla, no rompe nada)
+  await Promise.all([
+    ...videos.map(preloadVideo),
+    ...audios.map(preloadAudio),
+  ]);
+}
+
+
 /* -------------------- STATE -------------------- */
 let sceneIndex = 0;
 let stepIndex = 0;
@@ -734,7 +803,27 @@ stage.addEventListener("click", next);
 /* =========================================================
    INIT
    ========================================================= */
-loadScene(0).then(() => {
+(async function init(){
+  // (Opcional) Bloquea clicks mientras carga
+  stage.style.pointerEvents = "none";
+
+  await preloadAllAssets();
+
+  // Carga escena 0, pero espera el onload real de la primera imagen “front”
+  await loadScene(0);
+
+  await new Promise((r) => {
+    // fuerza a esperar a que la img activa cargue
+    const active = front;
+    if (active.complete && active.naturalWidth > 0) return r();
+    active.onload = () => r();
+    active.onerror = () => r();
+  });
+
   showCaption(scenes[0].steps[0]);
   stepIndex = 1;
-});
+
+  stage.style.pointerEvents = "auto";
+})();
+
+
