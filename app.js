@@ -61,7 +61,7 @@ const scenes = [
     id: 3,
     type: "image",
     src: "assets/escena3.png",
-    ambience: { src: "assets/amb_city.mp3", volume: 0.07, loop: true },
+    ambience: { src: "assets/amb_city.mp3", volume: 0.04, loop: true },
     steps: [
       { title: "Después de eso, pensé en tener un detalle contigo.", sub: "algo simple, pero con cariño.", pos: "pos-bottom" },
       { title: "Fui a una tienda donde había visto algo días antes.", sub: "pensé que todavía estaría ahí.", pos: "pos-bottom" },
@@ -73,7 +73,7 @@ const scenes = [
     id: 4,
     type: "image",
     src: "assets/escena4.jpg",
-    ambience: { src: "assets/forest.mp3", volume: 0.10, loop: true },
+    ambience: { src: "assets/forest.mp3", volume: 0.06, loop: true },
     steps: [
       { title: "Con el regalo al fin en mis manos…", sub: "fui directo al parque.", pos: "pos-bottom" },
       { title: "Entré con la mochila y la bolsita apretada.", sub: "sabía que estaba a punto de verte.", pos: "pos-bottom" },
@@ -142,7 +142,7 @@ const scenes = [
       { title: "Por muchos años más juntos.", sub: "", pos: "pos-center" }
     ],
     endVideo: {
-      src: "assets/vid10.mp4",
+      src: "assets/Vid10.mp4",
       title: "Feliz Primer Año,Mi Pequeña Dramatica :D",
       muted: true,
       volume: 0.15
@@ -685,3 +685,4 @@ stage.addEventListener("click", next);
 
   stage.style.pointerEvents = "auto";
 })();
+
