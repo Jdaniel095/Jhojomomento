@@ -30,8 +30,17 @@ const scenes = [
     src: "assets/escena0.jpg",
     ambience: { src: "assets/amb_space.mp3", volume: 0.08, loop: true },
     steps: [
-      { title: "Esta historia no empezó en un lugar…", sub: "empezó en una pantalla.", pos: "pos-bottom" },
-      { title: "Y sin darnos cuenta…", sub: "ya estábamos a punto de vivir algo muy real.", pos: "pos-bottom" }
+      { 
+  title: "Esta historia no empezó en un lugar…", 
+  sub: "empezó cuando dos caminos lejanos decidieron encontrarse.", 
+  pos: "pos-bottom" 
+},
+{ 
+  title: "Y sin darnos cuenta…", 
+  sub: "el mundo empezó a sentirse distinto contigo.", 
+  pos: "pos-bottom" 
+}
+
     ]
   },
   {
@@ -707,6 +716,7 @@ stage.addEventListener("click", next);
 
   stage.style.pointerEvents = "auto";
 })();
+
 
 
 
